@@ -14,3 +14,4 @@ spring:
           - dataId: shared-swagger.yaml # 共享日志配置
           - dataId: shared-seata.yaml # 共享seata配置
           - dataId: shared-sentinel.yaml # 共享sentinel配置
+          - dataId: shared-rabbitMQ.yaml # 共享rabbitMQ配置

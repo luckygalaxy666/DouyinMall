@@ -1,5 +1,6 @@
 package com.hmall.trade.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmall.api.client.CartClient;
 import com.hmall.api.client.ItemClient;
@@ -7,14 +8,19 @@ import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
 import com.hmall.common.exception.BadRequestException;
 import com.hmall.common.utils.UserContext;
+import com.hmall.trade.constants.MQConstants;
 import com.hmall.trade.domain.dto.OrderFormDTO;
 import com.hmall.trade.domain.po.Order;
 import com.hmall.trade.domain.po.OrderDetail;
 import com.hmall.trade.mapper.OrderMapper;
 import com.hmall.trade.service.IOrderDetailService;
 import com.hmall.trade.service.IOrderService;
+import io.netty.handler.codec.mqtt.MqttReasonCodeAndPropertiesVariableHeader;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +37,15 @@ import java.util.stream.Collectors;
  * </p>
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements IOrderService {
 
     private final ItemClient itemClient;
     private final IOrderDetailService detailService;
     private final CartClient cartClient;
+    private final RabbitTemplate rabbitTemplate;
+    private final OrderDetailServiceImpl orderDetailServiceImpl;
 
     @Override
     @GlobalTransactional
@@ -79,8 +88,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             throw new RuntimeException("库存不足！");
         }
 
-        // 4.清理购物车商品
-        cartClient.deleteCartItemByIds(itemIds);
+        // 4.清理购物车商品 改为利用RabbitMQ发送消息
+        try {
+            rabbitTemplate.convertAndSend("trade.topic", "order.create", itemIds);
+        } catch (AmqpException e) {
+            log.error("发送清除购物车的消息失败", e);
+            throw new RuntimeException(e);
+        }
+//        cartClient.deleteCartItemByIds(itemIds);
+
+        // 5. 发送延时消息，兜底服务
+        rabbitTemplate.convertAndSend(MQConstants.DELAY_EXCHANGE_NAME, MQConstants.DELAY_ORDER_KEY
+                , order.getId(), message -> {
+                    message.getMessageProperties().setDelay(10000);
+                    return message;
+                });
         return order.getId();
     }
     @Override
@@ -91,6 +113,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setStatus(2);
         order.setPayTime(LocalDateTime.now());
         updateById(order);
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        // 保证幂等性
+        Order order = getById(orderId);
+        if(order == null || order.getStatus() == 5){
+            return;
+        }
+        // 1. 取消订单
+        lambdaUpdate().eq(Order::getId, orderId)
+                .set(Order::getStatus, 5)
+                .set(Order::getCloseTime, LocalDateTime.now())
+                .update();
+        // 2.恢复库存
+        orderDetailServiceImpl.list(new QueryWrapper<OrderDetail>().eq("order_id", orderId))
+                .forEach(detail -> {
+                    ItemDTO itemDTO = itemClient.queryItemById(orderId);
+                    itemDTO.setStock(itemDTO.getStock() + detail.getNum());
+                    itemClient.updateItem(itemDTO);
+                });
     }
 
     private List<OrderDetail> buildDetails(Long orderId, List<ItemDTO> items, Map<Long, Integer> numMap) {
@@ -108,4 +151,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         return details;
     }
+
+
 }

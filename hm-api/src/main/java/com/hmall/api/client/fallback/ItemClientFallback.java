@@ -28,6 +28,17 @@ public class ItemClientFallback implements FallbackFactory<ItemClient> {
                 // 库存扣减业务需要触发事务回滚，查询失败，抛出异常
                 throw new BizIllegalException(cause);
             }
+
+            @Override
+            public ItemDTO queryItemById(Long id) {
+                log.error("远程调用ItemClient#queryItemById方法出现异常，参数：{}", id, cause);
+                return null;
+            }
+
+            @Override
+            public void updateItem(ItemDTO item) {
+                log.error("远程调用ItemClient#updateItem方法出现异常，参数：{}", item, cause);
+            }
         };
     }
 }

@@ -7,9 +7,7 @@ import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
 import com.hmall.api.client.fallback.ItemClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,4 +20,12 @@ public interface ItemClient {
 
     @PutMapping("items/stock/deduct")
     void  deductStock(List<OrderDetailDTO> detailDTOS);
+
+
+
+    @GetMapping("items/{id}")
+    ItemDTO queryItemById(@PathVariable("id") Long id);
+
+    @PutMapping("items")
+    void updateItem(@RequestBody ItemDTO item);
 }

@@ -12,6 +12,7 @@ import com.hmall.item.service.IItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ItemController {
 
     private final IItemService itemService;
+    private final RabbitTemplate rabbitTemplate;
 
     @ApiOperation("分页查询商品")
     @GetMapping("/page")
@@ -50,6 +52,7 @@ public class ItemController {
     public void saveItem(@RequestBody ItemDTO item) {
         // 新增
         itemService.save(BeanUtils.copyBean(item, Item.class));
+        rabbitTemplate.convertAndSend("es", "item.add", item.getId());
     }
 
     @ApiOperation("更新商品状态")
@@ -68,12 +71,16 @@ public class ItemController {
         item.setStatus(null);
         // 更新
         itemService.updateById(BeanUtils.copyBean(item, Item.class));
+        rabbitTemplate.convertAndSend("es", "item.update", item.getId());
+
     }
+
 
     @ApiOperation("根据id删除商品")
     @DeleteMapping("{id}")
     public void deleteItemById(@PathVariable("id") Long id) {
         itemService.removeById(id);
+        rabbitTemplate.convertAndSend("es", "item.delete", id);
     }
 
     @ApiOperation("批量扣减库存")
