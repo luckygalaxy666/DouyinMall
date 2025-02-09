@@ -1,0 +1,20 @@
+server:
+  port: 8086
+
+hm:
+  swagger:
+    title: "商品搜索接口文档"
+    package: com.hmall.search.controller
+  db:
+    database: hm-item
+
+feign:
+  okhttp:
+    enabled: true # 开启OKHttp连接池支持
+  sentinel:
+    enabled: true # 开启feign对sentinel的支持
+
+
+
+
+# keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
