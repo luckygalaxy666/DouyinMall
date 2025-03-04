@@ -53,7 +53,7 @@ public class ElastTest {
     @BeforeEach
     void setUp() {
         this.client = new RestHighLevelClient(RestClient.builder(
-                HttpHost.create("http://172.27.62.11:9200")
+                HttpHost.create("http://172.20.110.176:9200")
         ));
     }
 

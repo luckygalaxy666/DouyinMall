@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 public class SearchController {
 
     private final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
-            HttpHost.create("http://172.27.62.11:9200")
+            HttpHost.create("http://172.20.110.176:9200")
         ));
     private final ISearchService searchService;
 

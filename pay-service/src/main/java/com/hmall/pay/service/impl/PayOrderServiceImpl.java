@@ -42,7 +42,7 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderMapper, PayOrder> i
 
     private final UserClient userClient;
 
-//    private final TradeClient tradeClient;
+    private final TradeClient tradeClient;
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -66,18 +66,19 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderMapper, PayOrder> i
         }
         // 3.尝试扣减余额
         userClient.deductMoney(payOrderFormDTO.getPw(), po.getAmount());
+        log.info("支付成功，支付单id：{}，交易单id：{}", po.getId(), po.getBizOrderNo());
         // 4.修改支付单状态
         boolean success = markPayOrderSuccess(payOrderFormDTO.getId(), LocalDateTime.now());
         if (!success) {
             throw new BizIllegalException("交易已支付或关闭！");
         }
         // TODO 5.修改订单状态
-        // tradeClient.markOrderPaySuccess(po.getBizOrderNo());
-//        try {
-//            rabbitTemplate.convertAndSend("pay.direct", "pay.success", po.getBizOrderNo());
-//        } catch (Exception e) {
-//            log.error("支付成功的消息发送失败，支付单id：{}， 交易单id：{}", po.getId(), po.getBizOrderNo(), e);
-//        }
+        tradeClient.markOrderPaySuccess(po.getBizOrderNo());
+        try {
+            rabbitTemplate.convertAndSend("pay.direct", "pay.success", po.getBizOrderNo());
+        } catch (Exception e) {
+            log.error("支付成功的消息发送失败，支付单id：{}， 交易单id：{}", po.getId(), po.getBizOrderNo(), e);
+        }
     }
 
     public boolean markPayOrderSuccess(Long id, LocalDateTime successTime) {
