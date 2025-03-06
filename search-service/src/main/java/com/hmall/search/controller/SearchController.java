@@ -54,10 +54,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SearchController {
 
-    private final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
-            HttpHost.create("http://172.20.110.176:9200")
-        ));
-    private final ISearchService searchService;
+    private final RestHighLevelClient client;
 
     @ApiOperation("搜索商品")
     @GetMapping("/list")

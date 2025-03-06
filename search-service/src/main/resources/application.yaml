@@ -14,7 +14,10 @@ feign:
   sentinel:
     enabled: true # 开启feign对sentinel的支持
 
-
+elasticsearch:
+  host: es
+  port: 9200
+  scheme: http
 
 
 # keytool -genkeypair -alias hmall -keyalg RSA -keypass hmall123 -keystore hmall.jks -storepass hmall123
