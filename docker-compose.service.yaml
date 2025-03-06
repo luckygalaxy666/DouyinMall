@@ -64,7 +64,18 @@ services:
       - Mall
     restart: always
 
-
+  nginx:
+    image: nginx  # 使用的镜像
+    container_name: nginx  # 容器名称
+    ports:
+      - "18080:18080"  # 映射端口
+      - "18081:18081"
+    volumes:
+      - ./nginx/html:/usr/nginx/html  # 挂载 HTML 文件目录
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # 挂载 Nginx 配置文件
+    networks:
+      - Mall
+    restart: always
 
   sentinel:
     build: ./sentinel

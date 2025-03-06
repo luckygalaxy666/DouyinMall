@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @EnableFeignClients(basePackages = "com.hmall.api.client",defaultConfiguration = DefaultFeignConfig.class)
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.hmall.search", "com.hmall.item"})
 @MapperScan("com.hmall.item.mapper")
 @EnableConfigurationProperties(ElasticsearchConfig.class) // 可选，视情况而定
 public class SearchApplication {
