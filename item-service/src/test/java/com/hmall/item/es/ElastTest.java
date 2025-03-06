@@ -43,7 +43,7 @@ import java.util.Map;
 
 @Slf4j
 @ActiveProfiles("local")
-//@SpringBootTest
+@SpringBootTest
 public class ElastTest {
 
     private RestHighLevelClient client;
@@ -124,6 +124,7 @@ public class ElastTest {
         // 分页查询商品数据
         int pageNo = 1;
         int size = 1000;
+        log.info("itemService={}, client={}", itemService, client);
         while (true) {
             Page<Item> page = itemService.lambdaQuery().eq(Item::getStatus, 1).page(new Page<Item>(pageNo, size));
             // 非空校验
