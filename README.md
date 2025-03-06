@@ -3,7 +3,7 @@
 2.  进入目录DouyinMall，`mvn clean package -DskipTests`.
 3.  执行`docker compose -f docker-compose.env.yaml build`.
 4.  执行`docker compose -f docker-compose.env.yaml up -d`.
-5.  打开http://主机ip:8848/,将nacos目录里的nacos_config_export.zip导入配置。
+5.  打开http://主机ip:8848/   ,将nacos目录里的nacos_config_export.zip导入配置。
 6.  执行`docker compose -f docker-compose.service.yaml build`.
 7.  执行`docker compose -f docker-compose.service.yaml up -d`.
 
