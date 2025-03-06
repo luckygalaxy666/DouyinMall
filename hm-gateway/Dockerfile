@@ -5,7 +5,8 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # 将本地的 JAR 文件复制到容器中
-COPY hm-gateway.jar hm-gateway.jar
+COPY ./target/hm-gateway.jar hm-gateway.jar
+
 
 # 暴露应用程序运行的端口（根据实际情况修改）
 EXPOSE 8080

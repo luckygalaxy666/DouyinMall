@@ -100,8 +100,8 @@ const footApp = {
 							<li>夺宝岛</li>
 							<li>DIY装机</li>
 							<li>延保服务</li>
-							<li>黑马E卡</li>
-							<li>黑马通信</li>
+							<li>在线E卡</li>
+							<li>在线通信</li>
 						</ul>
 					</div>
 					<div class="yui3-u-1-6">

@@ -5,10 +5,10 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # 将本地的 JAR 文件复制到容器中
-COPY trade-service.jar trade-service.jar
+COPY ./target/trade-service.jar trade-service.jar
 
 # 暴露应用程序运行的端口（根据实际情况修改）
-EXPOSE 8085
+EXPOSE 8086
 
 # 启动应用程序
 ENTRYPOINT ["java", "-jar", "trade-service.jar"]

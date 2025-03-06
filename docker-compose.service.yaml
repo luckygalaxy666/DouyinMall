@@ -1,79 +1,76 @@
-version: "3.8"
 
 services:
 
   cart-service:
     build: ./cart-service
+    container_name: cart-service
     ports:
       - "8081:8081"
-    depends_on:
-      - mysql
-      - nacos
     networks:
       - Mall
     restart: always
 
   hm-gateway:
     build: ./hm-gateway
+    container_name: gateway
     ports:
       - "8080:8080"
-    depends_on:
-      - nginx
     networks:
       - Mall
     restart: always
 
   item-service:
     build: ./item-service
+    container_name: item-service
     ports:
       - "8084:8084"
-    depends_on:
-      - mysql
-      - nacos
     networks:
       - Mall
     restart: always
 
   pay-service:
     build: ./pay-service
+    container_name: pay-service
     ports:
       - "8085:8085"
-    depends_on:
-      - mysql
-      - nacos
     networks:
       - Mall
     restart: always
 
   trade-service:
     build: ./trade-service
+    container_name: trade-service
     ports:
       - "8086:8086"
-    depends_on:
-      - mysql
-      - nacos
     networks:
       - Mall
     restart: always
 
   user-service:
     build: ./user-service
+    container_name: user-service
     ports:
       - "8087:8087"
-    depends_on:
-      - mysql
-      - nacos
     networks:
       - Mall
     restart: always
 
+  search-service:
+    build: ./search-service
+    container_name: search-service
+    ports:
+      - "8088:8088"
+    networks:
+      - Mall
+    restart: always
+
+
+
   sentinel:
     build: ./sentinel
+    container_name: sentinel
     ports:
       - "8090:8090"
-    depends_on:
-      - mysql
-      - nacos
     networks:
       - Mall
     restart: always
@@ -82,7 +79,3 @@ networks:
   Mall:
     name: mall
 
-volumes:
-  es-data:
-  es-plugins:
-  mq-plugins:

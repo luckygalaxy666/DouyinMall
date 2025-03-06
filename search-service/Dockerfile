@@ -5,10 +5,10 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # 将本地的 JAR 文件复制到容器中
-COPY search-service.jar search-service.jar
+COPY ./target/search-service.jar search-service.jar
 
 # 暴露应用程序运行的端口（根据实际情况修改）
-EXPOSE 8086
+EXPOSE 8088
 
 # 启动应用程序
 ENTRYPOINT ["java", "-jar", "search-service.jar"]

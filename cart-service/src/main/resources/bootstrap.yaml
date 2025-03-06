@@ -5,7 +5,7 @@ spring:
     active: dev
   cloud:
     nacos:
-      server-addr: 172.20.110.176 # nacos地址
+      server-addr: nacos # nacos
       config:
         file-extension: yaml # 文件后缀名
         shared-configs: # 共享配置

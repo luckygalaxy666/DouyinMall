@@ -42,7 +42,7 @@ import java.util.Map;
 
 
 @Slf4j
-@ActiveProfiles("local")
+@ActiveProfiles("dev")
 @SpringBootTest
 public class ElastTest {
 

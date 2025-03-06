@@ -1,2 +1,3 @@
 /hm-service
-/logs
+/logsmysql/data
+mysql/data/

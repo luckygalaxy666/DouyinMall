@@ -5,10 +5,10 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # 将本地的 JAR 文件复制到容器中
-COPY pay-service.jar pay-service.jar
+COPY ./target/pay-service.jar pay-service.jar
 
 # 暴露应用程序运行的端口（根据实际情况修改）
-EXPOSE 8087
+EXPOSE 8085
 
 # 启动应用程序
 ENTRYPOINT ["java", "-jar", "pay-service.jar"]

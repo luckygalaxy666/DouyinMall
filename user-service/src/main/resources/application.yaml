@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8087
 feign:
   okhttp:
     enabled: true # 开启OKHttp连接池支持

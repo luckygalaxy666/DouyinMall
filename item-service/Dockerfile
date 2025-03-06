@@ -5,10 +5,10 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # 将本地的 JAR 文件复制到容器中
-COPY item-service.jar item-service.jar
+COPY ./target/item-service-1.0.0-exec.jar item-service.jar
 
 # 暴露应用程序运行的端口（根据实际情况修改）
-EXPOSE 8081
+EXPOSE 8084
 
 # 启动应用程序
 ENTRYPOINT ["java", "-jar", "item-service.jar"]
