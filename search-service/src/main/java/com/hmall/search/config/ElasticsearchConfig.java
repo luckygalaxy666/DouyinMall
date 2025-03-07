@@ -42,7 +42,7 @@ public class ElasticsearchConfig {
     }
 
     @Bean(destroyMethod = "close")
-    public RestHighLevelClient client() {
+    public RestHighLevelClient restHighLevelClient() {
         return new RestHighLevelClient(
                 RestClient.builder(new HttpHost(host, port, scheme))
         );

@@ -1,5 +1,5 @@
 # 使用官方的 OpenJDK 基础镜像
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:11-jdk-alpine
 
 # 设置工作目录
 WORKDIR /app
@@ -11,4 +11,4 @@ COPY ./target/search-service.jar search-service.jar
 EXPOSE 8088
 
 # 启动应用程序
-ENTRYPOINT ["java", "-jar", "search-service.jar"]
+ENTRYPOINT ["java","-Xmx256m", "-Xms256m", "-jar", "search-service.jar"]

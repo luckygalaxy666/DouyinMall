@@ -1,5 +1,5 @@
 # 使用官方的 OpenJDK 基础镜像
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:11-jdk-alpine
 
 # 设置工作目录
 WORKDIR /app
@@ -11,4 +11,4 @@ COPY ./target/trade-service.jar trade-service.jar
 EXPOSE 8086
 
 # 启动应用程序
-ENTRYPOINT ["java", "-jar", "trade-service.jar"]
+ENTRYPOINT ["java","-Xmx256m", "-Xms256m", "-jar", "trade-service.jar"]
